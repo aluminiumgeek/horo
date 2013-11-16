@@ -18,10 +18,10 @@ Horo makes many processes with <code>fork()</code>. You can watch what each of p
 Typical output of this command with explanation:
 
     1237 pts/9    S+     0:00 horo             | main process
-    1246 pts/9    S+     0:00 horo:c/lorng.py  | process that calls core-module lorng.py at time interval
+    1246 pts/9    S+     0:00 horo:c/lorng.py  | process that calls core-module lorng.py with a time interval
     1250 pts/9    S+     0:00 horo:m/fib.py    | process that waits for a response from standart module fib.py
     1253 pts/9    S+     0:00 horo:e/twit.py   | process that waits for a response from module twit.py called by an event
-    1255 pts/9    S+     0:00 horo: url title  | process that gets title from a URL
+    1255 pts/9    S+     0:00 horo: url title  | process that gets title from an URL
 
 
 ###Modules###
