@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # test_module.py (c) Mikhail Mezyakov <mihail265@gmail.com>
 # Released under the GNU GPL v.3
 #
@@ -5,6 +6,9 @@
 # First argument must be a module name; others - module parameters
 
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import importlib
 
 test_channel = '#test'

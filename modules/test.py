@@ -4,4 +4,7 @@
 # Module sends "SUCCESS" message to user on a channel
 
 def horo(channel, user, args):
-    return "PRIVMSG " + channel + " :" + user + ": SUCCESS"
+    return u'PRIVMSG {channel} :{user}: success'.format(
+        channel = channel,
+        user = user
+    )
