@@ -800,13 +800,23 @@ string& channel, string& user, vector<string> params) {
             cout << "Error invoking 'horo' in " << module_string << endl;
         }
         
-        const char* cResult = PyString_AsString(result);
-        if (!cResult) {
+        string cResult = PyString_AsString(result);
+        if (cResult != "") {
             PyErr_Print();
             cout << "Error converting result to C string" << endl;
         }
         
-        sendData(cResult);
+        if (cResult.find("\n") != string::npos) {
+            stringstream ss(cResult);
+            string resultLine;
+            
+            while (getline(ss, resultLine, '\n')) {
+                sendData(resultLine);
+            }
+        }
+        else {
+            sendData(cResult);
+        }
 
         // Cleaning up
         Py_DECREF(pluginModule);
