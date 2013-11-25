@@ -29,7 +29,7 @@ All modules are written in Python. You can see a typical module structure in fil
 [Modules repository](https://github.com/aluminiumgeek/horo-modules)
 
 Put all modules, except modules from <code>core</code> directory, to the <code>modules</code> directory.  
-Core-modules are called every <code>x</code> seconds. For each of core-module you need an entry in 'mod.conf' in a format:
+Core-modules are called every <code>x</code> seconds. For each of core-module you need an entry in <code>mod.conf</code> in a format:
 
     /path/to/module.py time_in_seconds.
 
