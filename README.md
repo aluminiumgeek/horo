@@ -34,7 +34,8 @@ Core-modules are called every <code>x</code> seconds. For each of core-module yo
     /path/to/module.py time_in_seconds.
 
 Put modules from repo's <code>core</code> directory into the horo's <code>core</code> directory and change variables <code>CHANNEL</code> in modules source code.  
-List of modules prints by <code>%lsmod</code> command on any channel.
+List of modules prints by <code>%lsmod</code> command on any channel.  
+Documentation for any module can be retrieved by: <code>horo: \<module_name\> --help/-h</code>
 
 
 [Why Horo?](http://animevice.com/holo/18-16320)

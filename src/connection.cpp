@@ -747,6 +747,7 @@ int Connection::createFork(string& child_prefix, string& child_name, string& mod
 string& channel, string& user, vector<string> params) {
     int p;
     p = fork();
+    
     if (p == 0) {
         // Set proccess name
         string new_ps_name(ps_name);
@@ -758,17 +759,26 @@ string& channel, string& user, vector<string> params) {
         PyRun_SimpleString("import sys");
         PyRun_SimpleString("sys.path.append('.')");
         
-        // Preparing parameters
-        PyObject *parameters = PyTuple_New(params.size());
-        if (!parameters) {
-            parameters = NULL;
-        }
+        bool isHelp = false;
         
-        for (unsigned int i = 0; i < params.size(); i++) {
-            PyObject* param = PyString_FromString(&params.at(i)[0]);
-            PyTuple_SET_ITEM(parameters, i, param);
+        PyObject *parameters = PyTuple_New(params.size());
+        
+        if (params.size() && (params.at(0) == "--help" || params.at(0) == "-h")) {
+            // Docstring retrieved
+            isHelp = true;
+        }
+        else {
+            // Preparing parameters
+            if (!parameters) {
+                parameters = NULL;
+            }
+        
+            for (unsigned int i = 0; i < params.size(); i++) {
+                PyObject* param = PyString_FromString(&params.at(i)[0]);
+                PyTuple_SET_ITEM(parameters, i, param);
             
-            Py_DECREF(param);
+                Py_DECREF(param);
+            }
         }
         
         // Import module
@@ -786,44 +796,61 @@ string& channel, string& user, vector<string> params) {
             cout << "Error retrieving 'horo' from " << module_string << endl;
         }
         
-        // Building arguments object
-        PyObject* args = Py_BuildValue("s, s, O", &channel[0], &user[0], parameters);
-        if (!args) {
-            PyErr_Print();
-            cout << "Error building args tuple for " << module_string << endl;
-        }
-        
-        // Calling main method
-        PyObject* result = PyObject_CallObject(mainFunc, args);
-        if (!result) {
-            PyErr_Print();
-            cout << "Error invoking 'horo' in " << module_string << endl;
-        }
-        
-        string cResult = PyString_AsString(result);
-        if (cResult != "") {
-            PyErr_Print();
-            cout << "Error converting result to C string" << endl;
-        }
-        
-        if (cResult.find("\n") != string::npos) {
-            stringstream ss(cResult);
-            string resultLine;
+        if (isHelp) {
+            // Getting docstring
+            PyObject* pyDocString = PyObject_GetAttrString(mainFunc, "__doc__");
+            string docString = PyString_AsString(pyDocString);
+
+            if (docString != "") {
+                string result = "PRIVMSG " + user + " :" + docString;
             
-            while (getline(ss, resultLine, '\n')) {
-                sendData(resultLine);
+                sendData(result);
             }
+            
+            Py_DECREF(pyDocString);
         }
         else {
-            sendData(cResult);
+            // Building arguments object
+            PyObject* args = Py_BuildValue("s, s, O", &channel[0], &user[0], parameters);
+            if (!args) {
+                PyErr_Print();
+                cout << "Error building args tuple for " << module_string << endl;
+            }
+        
+            // Calling main method
+            PyObject* result = PyObject_CallObject(mainFunc, args);
+            if (!result) {
+                PyErr_Print();
+                cout << "Error invoking 'horo' in " << module_string << endl;
+            }
+            
+            Py_DECREF(args);
+        
+            string cResult = PyString_AsString(result);
+            if (cResult == "") {
+                PyErr_Print();
+                cout << "Error converting result to C string" << endl;
+            }
+            
+            Py_DECREF(result);
+        
+            if (cResult.find("\n") != string::npos) {
+                stringstream ss(cResult);
+                string resultLine;
+            
+                while (getline(ss, resultLine, '\n')) {
+                    sendData(resultLine);
+                }
+            }
+            else {
+                sendData(cResult);
+            }
         }
 
         // Cleaning up
         Py_DECREF(pluginModule);
         Py_DECREF(parameters);
         Py_DECREF(mainFunc);
-        Py_DECREF(args);
-        Py_DECREF(result);
         
         Py_Finalize();
     }
