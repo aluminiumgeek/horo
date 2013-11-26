@@ -307,7 +307,7 @@ int Connection::botMode(string s) {
     
     if (smsg.substr(0,6) == "%lsmod") {
         /** Modules list */
-        sendData("PRIVMSG " + CHAN + " :Modules:" + modules());
+        sendData("PRIVMSG " + CHAN + " :Modules: " + modules());
     }
     
     if (smsg.find("http://") != string::npos && USERQ != NICK) {
@@ -402,24 +402,30 @@ int Connection::botMode(string s) {
     return 0;
 }
 
-// Modules list
+// List of modules
 string Connection::modules() const {
-    string list;
-    DIR *dp;
-    struct dirent *ep;
+    Py_Initialize();
     
-    dp = opendir("./modules/");
-    if (dp != NULL) {
-        string s(" ");
-        while ((ep = readdir(dp))) list += ep->d_name + s;
-        closedir(dp);
-    }
-    else perror("Couldn't open the directory");
+    PyObject* pyMain = PyImport_AddModule("__main__");
     
-    list = replaceAll(list, ".py", "");
-    list = replaceAll(list, ".", "");
-    list.replace(list.find(" "), 1, "");
-    return list;
+    PyRun_SimpleString(
+        "import pkgutil\n"
+        "def modules(): return ' '.join([name for _, name, _ in pkgutil.iter_modules(['modules'])])"
+    );
+    
+    PyObject* func = PyObject_GetAttrString(pyMain, "modules");
+    
+    PyObject* result = PyObject_CallObject(func, NULL);
+    
+    string modules = PyString_AsString(result);
+
+    // Cleaning 
+    Py_DECREF(func);
+    Py_DECREF(result);
+    
+    Py_Finalize();
+    
+    return modules;
 }
 
 string Connection::replaceAll(string& context, const string& from, const string& to) const {
@@ -761,7 +767,7 @@ string& channel, string& user, vector<string> params) {
         
         bool isHelp = false;
         
-        PyObject *parameters = PyTuple_New(params.size());
+        PyObject* parameters = PyTuple_New(params.size());
         
         if (params.size() && (params.at(0) == "--help" || params.at(0) == "-h")) {
             // Docstring retrieved
