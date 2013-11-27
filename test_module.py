@@ -4,6 +4,7 @@
 #
 # Import module from 'modules' directory and test it in a command line
 # First argument must be a module name; others - module parameters
+# If --help/-h option is specified after module name, print docstring
 
 import sys
 reload(sys)
@@ -20,5 +21,10 @@ if __name__ == '__main__':
     del sys.argv[0]
 
     module = importlib.import_module('modules.{0}'.format(module_name))
-    
-    print >>sys.stdout, module.horo(test_channel, test_user, sys.argv)
+
+    if sys.argv and sys.argv[0] in ('--help', '-h'):
+        result = module.horo.__doc__
+    else:
+        result = module.horo(test_channel, test_user, sys.argv)
+        
+    print >>sys.stdout, result
