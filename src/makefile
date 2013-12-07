@@ -1,7 +1,7 @@
-CC		= g++
-OPTIMIZE        = -O2
-OPTIONS		= -g -Wall -lpcre -lpython2.7 -I/usr/include/python2.7
-CFLAGS          = $(OPTIMIZE) $(OPTIONS)
+CC = g++
+OPTIMIZE = -O2
+OPTIONS = -g -Wall -lpcre -lpython2.7 -I/usr/include/python2.7
+CFLAGS = $(OPTIMIZE) $(OPTIONS)
 
 all: bot
 
