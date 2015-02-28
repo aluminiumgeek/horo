@@ -14,7 +14,7 @@ Script <code>start.sh</code> builds and runs Horo. Don't forget to declare host 
 Also make your changes in <code>config</code> file.
 
 ###Running###
-Horo makes many processes with <code>fork()</code>. You can watch what each of processes doing with <code>ps cx</code> command in your terminal. 
+Horo makes many processes with <code>fork()</code>. You can watch for processes with <code>ps cx</code> command in your terminal. 
 Typical output of this command with explanation:
 
     1237 pts/9    S+     0:00 horo             | main process
@@ -25,7 +25,7 @@ Typical output of this command with explanation:
 
 
 ###Modules###
-All modules are written in Python. You can see a typical module structure in file <code>modules/test.py</code>  
+Modules are all written in Python. You can see a typical module structure in file <code>modules/test.py</code>  
 [Modules repository](https://github.com/aluminiumgeek/horo-modules)
 
 Put all modules, except modules from <code>core</code> directory, to the <code>modules</code> directory.  
@@ -34,7 +34,7 @@ Core-modules are called every <code>x</code> seconds. For each of core-module yo
     /path/to/module.py time_in_seconds.
 
 Put modules from repo's <code>core</code> directory into the horo's <code>core</code> directory and change variables <code>CHANNEL</code> in modules source code.  
-List of modules prints by <code>%lsmod</code> command on any channel.  
+You can retrieve list of loaded modules by <code>%lsmod</code> command on any channel.  
 Documentation for any module can be retrieved by: <code>horo: \<module_name\> --help/-h</code>
 
 
