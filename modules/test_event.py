@@ -6,7 +6,6 @@
 EVENTS = ['test', 'say']
 
 def horo(channel, user, msg):
-    print msg
     for event in EVENTS:
         if msg.startswith(event):
             return "PRIVMSG {channel} :{user}: event triggered by '{text}' text".format(

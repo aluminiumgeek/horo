@@ -10,3 +10,6 @@ def horo(channel, user, args):
         channel = channel,
         user = user
     )
+
+
+horo.test = 'PRIVMSG #test :user: success'

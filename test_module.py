@@ -26,5 +26,7 @@ if __name__ == '__main__':
         result = module.horo.__doc__
     else:
         result = module.horo(test_channel, test_user, sys.argv)
-        
+        if hasattr(module.horo, 'test'):
+            assert result == module.horo.test, 'Something went wrong inside the module:\n{} != {}'.format(result, module.horo.test)
+
     print >>sys.stdout, result
