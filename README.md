@@ -1,14 +1,14 @@
-#Horo#
+# Horo
 
 Horo is a modular IRC bot written in C++.  
 It is extremely fast, lightweight (takes only 2MiB of RAM) and extendable
 
-###Requirements###
+### Requirements
 
 * libpcre-dev for regexp handling
 * python-dev (at least 2.7) for python modules
 
-###Building###
+### Building
 
 Script <code>start.sh</code> builds and runs Horo. Don't forget to declare host and port. 
 Also make your changes in <code>config</code> file.
@@ -24,7 +24,7 @@ Typical output of this command with explanation:
     1255 pts/9    S+     0:00 horo: url title  | process that gets title from an URL
 
 
-###Modules###
+### Modules
 Modules are all written in Python. You can see a typical module structure in file <code>modules/test.py</code>  
 [Modules repository](https://github.com/aluminiumgeek/horo-modules)
 
